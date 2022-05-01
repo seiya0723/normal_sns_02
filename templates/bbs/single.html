@@ -1,0 +1,47 @@
+{% extends "bbs/base.html" %}
+{% load static %}
+
+
+{% block extra_head %}
+{% endblock %}
+
+
+{% block main %}
+<a class="btn btn-outline-danger" href="{% url 'bbs:index' %}">戻る</a>
+
+<div class="border">
+    <div>{{ topic.category.name }}</div>
+    <div>{{ topic.user.username }}</div>
+    <div>{{ topic.comment }}</div>
+</div>
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <label><input type="checkbox" name="secret">:投稿者にのみ表示する</label>
+    <textarea class="form-control" name="comment" placeholder="コメント"></textarea>
+    <input class="form-control" type="submit" value="リプライ">
+</form>
+
+{% for reply in replies %}
+
+
+{# シークレットであり、なおかつ、Topicの投稿者と閲覧者が不一致である場合、投稿内容は非表示 #}
+{% if reply.secret and request.user.id != topic.user.id %}
+<div class="border">
+    <div>この投稿は投稿者にのみ表示されます。</div>
+</div>
+{% else %}
+<div class="border">
+    <div>{{ reply.user.username }}</div>
+    <div>{{ reply.comment }}</div>
+</div>
+{% endif %}
+
+{% endfor %}
+
+
+{% endblock %}
+
+
+
+

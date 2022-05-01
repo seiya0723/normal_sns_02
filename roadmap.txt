@@ -1,0 +1,47 @@
+
+この先のロードマップ
+
+
+## 不適切な単語を検知して投稿を拒否するには？
+
+オリジナルのバリデーションを追加する。
+
+https://noauto-nolife.com/post/django-models-origin-validators/
+
+
+## ユーザーアイコンを表示させるには？
+
+カスタムユーザーモデルを実装させ、アイコンのフィールドを新たに追加する。
+
+https://noauto-nolife.com/post/django-custom-user-model-allauth-bbs/
+
+
+## ハッシュタグを使うには？
+
+カスタムテンプレートフィルタと正規表現を組み合わせる。
+
+https://noauto-nolife.com/post/django-custom-template-tags-hashtags/
+
+
+## トピックに良いねをつけるには？
+
+良いねモデルを新たに作り、ユーザーモデルとトピックを外部キーとして指定する。
+
+トピックモデル側は、自分に紐付いている良いねをカウントして良いね数を表示させるメソッドを追加する(リプライ数を表示するときと同じ要領で)
+
+
+## チャット機能を実装させるには？
+
+Ajaxでポーリングもしくはロングポーリングを実装。
+
+https://noauto-nolife.com/post/django-ajax-long-polling/
+
+
+## イラスト投稿機能が欲しい
+
+canvasを使う。canvasタグはゲームなどにも使える。
+
+https://noauto-nolife.com/post/django-canvas-send-img-by-ajax/
+
+
+

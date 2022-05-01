@@ -1,0 +1,77 @@
+{% extends "bbs/base.html" %} {# extendsは一番最初に書く #}
+{% load static %} {# 継承される側がload staticを実行していたとしても、継承する側でもload staticをやっておかないとstaticテンプレートタグは使えない#}
+{# loadはテンプレート単位でリセットされる#}
+{% load param_change %}
+
+
+{# index.html固有の場合はここに書く #}
+{% block extra_head %}
+<script>console.log("これでindex.htmlでもJSの読み込みができる");</script>
+<script src="{% static 'bbs/js/script.js' %}"></script>
+{% endblock %}
+
+
+{% block main %}
+
+    {# <img src="{% static 'bbs/img/test.png' %}" alt=""> #}
+
+    {% if request.user.is_authenticated %}
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <select name="category">
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+
+        <textarea class="form-control" name="comment" placeholder="コメント"></textarea>
+        <input type="file" name="image">
+        <input class="form-control" type="submit" value="送信">
+    </form>
+    {% endif %}
+
+
+    <form action="" method="get">
+        <select name="category">
+            <option value="">カテゴリを選んでください</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}" {% if request.GET.category == category.str_id %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="search" placeholder="キーワード検索" value="{{ request.GET.search }}">
+        <input type="submit" value="検索">
+    </form>
+
+    {% for topic in topics %}
+    <div class="border">
+        <div>{{ topic.category.name }}</div>
+        <div>{{ topic.dt }}:[ {{ topic.user.username }} ]:{{ topic.comment }}</div>
+        {# imgタグのsrc属性にはフィールド名だけでなく、url属性も指定する。ただし、値がNullの場合エラーが起こるので、下記のように分岐する。#}
+        {% if topic.image %}
+        <div><img src="{{ topic.image.url }}" alt="画像"></div>
+        {% endif %}
+        <a class="btn btn-outline-primary" href="{% url 'bbs:single' topic.id %}">個別ページ</a>
+
+        <div>リプライ数({{ topic.reply_amount }})</div>
+    </div>
+    {% endfor %}
+
+    {# カスタムテンプレートタグあり(検索のパラメータが保持される) #}
+    <ul class="pagination justify-content-center">
+        {% if topics.has_previous %}
+        <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' topics.previous_page_number %}">前のページ</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link">前のページ</a></li>
+        {% endif %}
+        <li class="page-item"><a class="page-link">{{ topics.number }}</a></li>
+        {% if topics.has_next %}
+        <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' topics.next_page_number %}">次のページ</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link">次のページ</a></li>
+        {% endif %}
+    </ul>
+
+
+{% endblock %}
+
